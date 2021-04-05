@@ -1,6 +1,7 @@
 from priority_queue import PriorityQueue
+from typing import Dict, List, Any
 
-def greedy_bfs(src, dst, romania, heuristic):
+def greedy_bfs(src: str, dst: str, romania: Dict[str, Any], heuristic: Dict[str, int]):
     path = {}
     distance = {}
     pq = PriorityQueue()
@@ -28,7 +29,7 @@ def greedy_bfs(src, dst, romania, heuristic):
     
     print_path(src, dst, path, distance, expandedlist)
 
-def print_path(src, dst, path, distance, expandedlist):
+def print_path(src: str, dst: str, path: Dict[str, Any], distance: Dict[str, int], expandedlist: List[str]):
     fixpath = []
     end = dst
 
