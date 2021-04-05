@@ -11,7 +11,7 @@ Lugoj, 244
 Mehadia, 241
 Neamt, 234
 Oradea, 380
-Pitesti, 100
+Piteshi, 100
 Rimnicu Vilcea, 193
 Sibiu, 253
 Timisoara, 329
