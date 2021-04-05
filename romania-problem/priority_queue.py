@@ -8,7 +8,7 @@ class PriorityQueue:
         heapq.heappush(self.cities, (cost, city))
 
     def pop(self):
-        return heapq.heappop(self.cities)[1]
+        return heapq.heappop(self.cities)
 
     def is_empty(self) -> bool:
         if (self.cities == []):
