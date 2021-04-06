@@ -32,15 +32,15 @@ def ids(src: str, dst: str, romania: Dict[str, Any]):
 def greedy_bfs(src: str, dst: str, romania: Dict[str, Any], heuristic: Dict[str, int]):
     path = {}
     distance = {}
-    pq = PriorityQueue()
-
-    pq.push(src, 0)
+    openList = PriorityQueue()
+    closedList = []
+    
+    openList.push(src, 0)
     distance[src] = 0
     path[src] = None
-    closedList = []
 
-    while (pq.is_empty() == False):
-        curr = pq.pop()
+    while (openList.is_empty() == False):
+        curr = openList.pop()
         closedList.append(curr[1])
 
         if (curr[1] == dst):
@@ -52,7 +52,7 @@ def greedy_bfs(src: str, dst: str, romania: Dict[str, Any], heuristic: Dict[str,
             if (node.city not in distance):
                 distance[node.city] = gcost
                 fcost = heuristic[node.city]
-                pq.push(node.city, fcost)
+                openList.push(node.city, fcost)
                 path[node.city] = curr[1]
     
     print_result(src, dst, path, distance, "Greedy BFS")
@@ -61,15 +61,15 @@ def greedy_bfs(src: str, dst: str, romania: Dict[str, Any], heuristic: Dict[str,
 def astar(src, dst, romania, heuristic):
     path = {}
     distance = {}
-    pq = PriorityQueue()
-
-    pq.push(src, 0)
+    openList = PriorityQueue()
+    closedList = []
+    
+    openList.push(src, 0)
     distance[src] = 0
     path[src] = None
-    closedList = []
 
-    while (pq.is_empty() == False):
-        curr = pq.pop()
+    while (openList.is_empty() == False):
+        curr = openList.pop()
         closedList.append(curr[1])
 
         if (curr[1] == dst):
@@ -81,7 +81,7 @@ def astar(src, dst, romania, heuristic):
             if (node.city not in distance or gcost < distance[node.city]):
                 distance[node.city] = gcost
                 fcost = gcost + heuristic[node.city]
-                pq.push(node.city, fcost)
+                openList.push(node.city, fcost)
                 path[node.city] = curr[1]
     
     print_result(src, dst, path, distance, "A Star")
