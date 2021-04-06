@@ -1,9 +1,11 @@
 from priority_queue import PriorityQueue
 from typing import Dict, List, Any
+import time
 
-def dfs(src: str, dst: str, romania: Dict[str, Any], visited: List[str], path: Dict[str, str], distance: int, depth_limit: int = 100, depth: int = 0) -> bool:
+def dfs(src: str, dst: str, romania: Dict[str, Any], visited: List[str], path: Dict[str, str],
+        distance: int, depth_limit: int = 100, depth: int = 0) -> bool:
     if (src == dst):
-        print_path(src, dst, path, {dst: distance}, visited, "DFS")
+        print_result("Arad", dst, path, {dst: distance}, "DFS")
         return True
     
     if (depth >= depth_limit):
@@ -11,18 +13,21 @@ def dfs(src: str, dst: str, romania: Dict[str, Any], visited: List[str], path: D
 
     visited.append(src)
 
-    for item in romania[src]:
-        if (item.city not in visited):
-            path[item.city] = src
-            if (dfs(item.city, dst, romania, visited, path, distance + item.dist, depth_limit, depth + 1)):
+    for node in romania[src]:
+        if (node.city not in visited):
+            path[node.city] = src
+            if (dfs(node.city, dst, romania, visited, path, distance + node.dist, depth_limit,
+                depth + 1)):
                 return True
 
     return False
+
 
 def ids(src: str, dst: str, romania: Dict[str, Any]):
     for depth in range(1, len(romania)):
         if (dfs(src, dst, romania, [], {}, 0, depth)):
             break
+
 
 def greedy_bfs(src: str, dst: str, romania: Dict[str, Any], heuristic: Dict[str, int]):
     path = {}
@@ -41,16 +46,17 @@ def greedy_bfs(src: str, dst: str, romania: Dict[str, Any], heuristic: Dict[str,
         if (curr[1] == dst):
             break
 
-        for new in romania[curr[1]]:
-            gcost = distance[curr[1]] + int(new.dist)
+        for node in romania[curr[1]]:
+            gcost = distance[curr[1]] + int(node.dist)
 
-            if (new.city not in distance):
-                distance[new.city] = gcost
-                fcost = heuristic[new.city]
-                pq.push(new.city, fcost)
-                path[new.city] = curr[1]
+            if (node.city not in distance):
+                distance[node.city] = gcost
+                fcost = heuristic[node.city]
+                pq.push(node.city, fcost)
+                path[node.city] = curr[1]
     
-    print_path(src, dst, path, distance, closedList, "Greedy BFS")
+    print_result(src, dst, path, distance, "Greedy BFS")
+
 
 def astar(src, dst, romania, heuristic):
     path = {}
@@ -69,32 +75,31 @@ def astar(src, dst, romania, heuristic):
         if (curr[1] == dst):
             break
 
-        for new in romania[curr[1]]:
-            gcost = distance[curr[1]] + int(new.dist)
+        for node in romania[curr[1]]:
+            gcost = distance[curr[1]] + int(node.dist)
 
-            if (new.city not in distance or gcost < distance[new.city]):
-                distance[new.city] = gcost
-                fcost = gcost + heuristic[new.city]
-                pq.push(new.city, fcost)
-                path[new.city] = curr[1]
+            if (node.city not in distance or gcost < distance[node.city]):
+                distance[node.city] = gcost
+                fcost = gcost + heuristic[node.city]
+                pq.push(node.city, fcost)
+                path[node.city] = curr[1]
     
-    print_path(src, dst, path, distance, closedList, "A Star")
+    print_result(src, dst, path, distance, "A Star")
 
-def print_path(src: str, dst: str, path: Dict[str, Any], distance: Dict[str, int], closedList: List[str], method: str):
-    fixpath = []
-    end = dst
 
-    while (path.get(end) != None):
-        fixpath.append(end)
-        end = path[end]
-    fixpath.append(src)
-    fixpath.reverse()
+def print_result(src: str, dst: str, path: Dict[str, Any], distance: Dict[str, int], method: str):
+    new_path = []
+    target = dst
 
-    print("Program algoritma " + method + " untuk masalah Romania Arad => Bucharest")
-    print("=======================================================")
-    print("Kota yg mungkin dijelajah \t\t: " + str(closedList))
-    print("Jumlah kemungkinan kota \t\t: " + str(len(closedList)))
-    print("=======================================================")
-    print("Kota yg dilewati dg jarak terpendek\t: " + str(fixpath))
-    print("Jumlah kota yang dilewati \t\t: " + str(len(fixpath)))
-    print("Total jarak \t\t\t\t: " + str(distance[dst]))
+    while (path.get(target) != None):
+        new_path.append(target)
+        target = path[target]
+
+    new_path.append(src)
+    new_path.reverse()
+
+    print("Penyelesaian masalah Romania Arad => Bucharest menggunakan algoritma " + method)
+    print("=======================================================================")
+    print("Kota yg dilewati\t: " + str(new_path))
+    print("Jumlah kota\t\t: " + str(len(new_path)))
+    print("Total jarak\t\t: " + str(distance[dst]))
